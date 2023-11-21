@@ -1,4 +1,3 @@
-Comida
 pan
 uva
 atun
