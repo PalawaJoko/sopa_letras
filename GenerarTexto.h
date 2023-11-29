@@ -1,5 +1,5 @@
-#ifndef SOPADELETRAS_H
-#define SOPADELETRAS_H
+#ifndef GENERARTEXTO_H
+#define GENERARTEXTO_H
 
 #include <stdio.h>
 #include <string.h>
