@@ -53,9 +53,9 @@ void menuDif(char Array[][MAX]){
 	}
 }
 
-void subMenu(){
+int subMenu(){
 	menuTemas(Datos);
 	menuDif(Datos);
 	ModuloMatriz(Datos);
-	
+	return 0;
 }
