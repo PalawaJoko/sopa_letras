@@ -53,7 +53,7 @@ void menuDif(char Array[][MAX]){
 	}
 }
 
-void main(){
+void subMenu(){
 	menuTemas(Datos);
 	menuDif(Datos);
 	ModuloMatriz(Datos);
