@@ -1,4 +1,4 @@
-//para correr el archivo: gcc -o registros registros.c -lm
+//para ejecutar el archivo: gcc -o Registro Registro.c -lm
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -132,7 +132,7 @@ void ComparacionPuntajes() {
 int main() { //Ejecutar funciones anteriores
     VerArchivo();
     IngresarNombre();
-    FuncionDeTurnos(1, 1); // Ejemplo
+    FuncionDeTurnos(1, 1); // Ejemplo de prueba
     ComparacionPuntajes();
     return 0;
 }
