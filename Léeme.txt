@@ -1,0 +1,8 @@
+Entrega Hito 3, Curso Metodos de Programación Interdisciplinaria
+Laboratiorio, sección L-2 (Martes modulo 4)
+Autores: Marco Fribla, Sebastian Cerpa, Agustin Alvarado
+
+Notas: El codigo enviado aun no es compilable, puesto que faltan algunos archivos .h para relacionar los .c entre si.
+
+Licencia: GNU libre.
+Todos los derechos reservados.
