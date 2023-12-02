@@ -5,11 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX 10
-#define EXIT 0
 
-void menuTemas(char Array[][MAX]);
-void menuDif(char Array[][MAX]);
+void menuTemas(char Array[2][1]);
+void menuDif(char Array[2][1]);
 int subMenu();
 
 #endif
