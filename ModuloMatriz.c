@@ -39,7 +39,7 @@ void rellenaMatrix(struct casilla sopa[][MAX], int n){
 		for(int j=0;j<n; j++){
 		
 			sopa[i][j].Letra = 'A';
-			sopa[i][j].ocupado = false;
+			sopa[i][j].ocupado = true;
 		}
 	}
 }
@@ -54,7 +54,13 @@ void imprimeMatriz(struct casilla sopa[][MAX], int n){
 	for(int i=0;i<n;i++){
 		printf("[%d]", i);
 		for(int j=0;j<n; j++){
-			printf("[%c]", sopa[i][j].Letra);
+			if(sopa[i][j].ocupado){
+				printf("[%c]", sopa[i][j].Letra);
+			}
+			else{
+				printf("[\033[1;34m%c\033[0m]", sopa[i][j].Letra);
+			}
+			
 			
 		}
     	printf("\n");
@@ -62,86 +68,119 @@ void imprimeMatriz(struct casilla sopa[][MAX], int n){
 
 }
 //Funcion que permite imprimir en pantalla la lista de palabras
-void imprimeLista(char listaPalabras[MAX][MAX], int n){
+
+void imprimeLista(char listaPalabras[MAX][MAX], int largoListaPalabras){
 	printf("Palabras a buscar: \n");
 	printf("[");
-	for(int i=0;i<(n-1);i++){
+	for(int i=0;i<(largoListaPalabras-1);i++){
 		
 		printf("%s, ", listaPalabras[i]);
 
 	}
-	printf("%s] \n", listaPalabras[n-1]);
+	printf("%s] \n", listaPalabras[largoListaPalabras-1]);
 }
 
 //Agrega elementos a un arreglo
+
 void agregarElemento(char palabraEscogida[MAX], int i, struct casilla sopa[][MAX], int j, int k){
 	palabraEscogida[i] = sopa[j][k].Letra;
-	printf("agregarElemento\n");
-	printf("%c\n", palabraEscogida[i]);
 }
 
 //Corrobora que las palabra ingresada pertenezca a la lista (*por terminar*)
-void validarPalabras(int posIni_i, int posIni_j, int posFin_i, int posFin_j, char dir, struct casilla sopa[][MAX]){
 
-	/*char palabraEscogida[MAX];
-	printf("HOlA\n");
-	printf("%d", posIni_i);
+void obtenerPalabra(int posIni_i, int posIni_j, int posFin_i, int posFin_j, char dir, struct casilla sopa[][MAX], int n, char palabraEscogida[MAX]){
+
 
 	for(int i = 0; i<MAX; i++){
 		agregarElemento(palabraEscogida, i, sopa, posIni_i, posIni_j);
+		if(posIni_i==posFin_i && posIni_j == posFin_j){
+			break;
+		}
+		if(dir=='1'){
+			
+			if(posIni_i >= 0){
+				
+				posIni_i--;
+			}
+			
+		}
+		if(dir=='2'){
+		
+			if(posIni_i <= n){
+				
+				posIni_i++;
+			}
+		}
+		
+		if(dir=='3'){
+			
+			if(posIni_j >= 0){
+				posIni_j--;
+				
+			}
+		}
+		if(dir=='4'){
+		
+			if(posIni_j <= n){
+				
+				posIni_j++;
+			}
+		}
+
+	}
+
+}
+//elimina la palabra de la lista 
+
+void eliminaPalabra(char listaPalabras[MAX][MAX], char palabraEscogida[MAX], int i){
+	for(int j = 0; j < strlen(palabraEscogida); j++){
+		listaPalabras[i][j] = '-';
+	}
+}
+//elimina la palabra de la matriz
+
+void eliminaPalabraMatriz(struct casilla sopa[][MAX], int n, int posIni_i, int posIni_j, char dir, char palabraEscogida[MAX]){
+
+	for(int i = 0; i<strlen(palabraEscogida); i++){
+		
+		sopa[posIni_i][posIni_j].ocupado = false;
+		
 		if(dir=='1'){
 			posIni_i--;
-			if(posIni_i==posFin_i){
-				break;
-			}
 		}
 		if(dir=='2'){
 			posIni_i++;
-			if(posIni_i==posFin_i){
-				break;
-			}
 		}
+		
 		if(dir=='3'){
-			posIni_i--;
+			posIni_j--;
+		}
+		
+		if(dir=='4'){
 			posIni_j++;
-			if(posIni_i==posFin_j ){
-				break;
-			}
 		}
-		if(dir=='1'){
-			posIni_i--;
-			if(posIni_i==posFin_j){
-				break;
-			}
-		}
-		if(dir=='1'){
-			posIni_i--;
-			if(posIni_i==posFin_j){
-				break;
-			}
-		}
-		if(dir=='1'){
-			posIni_i--;
-			if(posIni_i==posFin_j){
-				break;
-			}
-		}
-		if(dir=='1'){
-			posIni_i--;
-			if(posIni_i==posFin_j){
-				break;
-			}
-		}
-
-		printf("HOLA\n");
+		
 	}
-	printf("%s\n", palabraEscogida);
-*/
+}
+	
+//comprueba que la palabra ingresada pertenece a la lista
+
+bool validarPalabra(char palabraEscogida[MAX], char listaPalabras[MAX][MAX], int largoListaPalabras, struct casilla sopa[][MAX], int n, int posIni_i, 
+					int posIni_j, int posFin_i, int posFin_j, char dir){
+	for(int i = 0; i < largoListaPalabras; i++){
+		if(strcmp(palabraEscogida, listaPalabras[i])==0){
+			eliminaPalabra(listaPalabras, palabraEscogida, i);
+			eliminaPalabraMatriz(sopa, n, posIni_i, posIni_j, dir, palabraEscogida);
+			return true;
+		}
+	}
+	return false;
 }
 
-//Verifica que aun queden palabras por buscar (*por terminar*)
-bool verificarPalabras(char Palabras[MAX][MAX], int n){
-	if(Palabras[0]==Palabras[n-1]){
+//Verifica que aun queden palabras por buscar 
+
+bool verificarPalabras(int aciertos, int largoListaPalabras){
+	if( aciertos == largoListaPalabras){
 		return false;
 	}
 	else{
@@ -149,11 +188,14 @@ bool verificarPalabras(char Palabras[MAX][MAX], int n){
 	}
 }
 
-//Funcion que permite la interaccion con el usuario (*por terminar*)
+//Funcion que permite la interaccion con el usuario 
 //Jugar(Matriz principal, largo de la matriz, listado de palabras)
-void Jugar(struct casilla sopa[][MAX], int n, char listaPalabras[MAX][MAX]){
+
+int Jugar(struct casilla sopa[][MAX], int n, char listaPalabras[MAX][MAX], int largoListaPalabras){
 	int turnos = 0;
-	while(verificarPalabras(listaPalabras, 5)){
+	int aciertos = 0;
+	printf("-------------Inicio del juego-------------");
+	while(verificarPalabras(aciertos, largoListaPalabras)){
 		char posIni_i[MAX];
 		char posIni_j[MAX];
 		char posFin_i[MAX];
@@ -162,42 +204,42 @@ void Jugar(struct casilla sopa[][MAX], int n, char listaPalabras[MAX][MAX]){
 		printf("Turnos utilizados = %d\n", turnos);
 		
 		//Preguntamos por la posicion inicial y final de la palabra, además de la direccion
-		printf("Ingresa la posicion inicial i de la palabra: ");
+		printf("Ingresa la posicion inicial i de la palabra (de arriba hacia abajo): ");
 		fgets(posIni_i, MAX, stdin);
 		
 		//Se revisa que la entrada sea la permitida
 		while((isdigit(posIni_i[0])==0) || (posIni_i[0] < '0' || (posIni_i[0] > (n-1 + '0')))){
 			printf("Entrada incorrecta, Vuelve a intentarlo \n");
-			printf("Ingresa la posicion inicial i de la palabra: ");
+			printf("Ingresa la posicion inicial i de la palabra (de arriba hacia abajo): ");
 			fgets(posIni_i, MAX, stdin);
 		}
-		printf("Ingresa la posicion inicial j de la palabra: ");
+		printf("Ingresa la posicion inicial j de la palabra (de izquierda a derecha): ");
 		fgets(posIni_j, MAX, stdin);	
 		
 		//Se revisa que la entrada sea la permitida
 		while(isdigit(posIni_j[0])==0 || (posIni_j[0] < '0' || (posIni_j[0] > (n-1 + '0')))){
 			printf("Entrada incorrecta, Vuelve a intentarlo \n");
-			printf("Ingresa la posicion inicial j de la palabra: ");
+			printf("Ingresa la posicion inicial j de la palabra (de izquierda a derecha): ");
 			fgets(posIni_j, MAX, stdin);
 		}
 		
-		printf("Ingresa la posicion final i la palabra: ");
+		printf("Ingresa la posicion final i la palabra (de arriba hacia abajo): ");
 		fgets(posFin_i, MAX, stdin);
 		
 		//Se revisa que la entrada sea la permitida
 		while(isdigit(posFin_i[0])==0 || posFin_i[0] < '0' || posFin_i[0] > (n-1 + '0')){
 			printf("Entrada incorrecta, Vuelve a intentarlo \n");
-			printf("Ingresa la posicion final i de la palabra: ");
+			printf("Ingresa la posicion final i de la palabra (de arriba hacia abajo): ");
 			fgets(posFin_i, MAX, stdin);
 		}
 		
-		printf("Ingresa la posicion final j la palabra: ");
+		printf("Ingresa la posicion final j la palabra (de izquierda a derecha): ");
 		fgets(posFin_j, MAX, stdin);
 		
 		//Se revisa que la entrada sea la permitida
 		while(isdigit(posFin_j[0])==0 || posFin_j[0] < '0' || posFin_j[0] > (n-1 + '0')){
 			printf("Entrada incorrecta, Vuelve a intentarlo \n");
-			printf("Ingresa la posicion final j la palabra: ");
+			printf("Ingresa la posicion final j la palabra (de izquierda a derecha): ");
 			fgets(posFin_j, MAX, stdin);
 		}
 		
@@ -232,23 +274,47 @@ void Jugar(struct casilla sopa[][MAX], int n, char listaPalabras[MAX][MAX]){
 				break;
 		}
 
-		scanf("%c", posIni_i);
 		turnos++;
-		validarPalabras(atoi(posIni_i),atoi(posIni_j), atoi (posFin_i), atoi (posFin_j), dir[0], sopa);
-	
+		char palabraEscogida[MAX] = "";
+		//variables auxiliares
+		int posIni_i_aux = atoi(posIni_i);
+		int posIni_j_aux = atoi(posIni_j);
+		int posFin_i_aux = atoi(posFin_i);
+		int posFin_j_aux = atoi(posFin_j);
+		
+		obtenerPalabra(posIni_i_aux, posIni_j_aux, posFin_i_aux, posFin_j_aux, dir[0], sopa, n, palabraEscogida);
+		if(validarPalabra(palabraEscogida, listaPalabras, largoListaPalabras, sopa, n, atoi(posIni_i), atoi(posIni_j), atoi (posFin_i), atoi (posFin_j), dir[0])){
+			printf("\033[1;32mPalabra ingresada correcta\033[0m\n");
+			aciertos++;
+		}
+		else{
+			printf("\033[1;31mPalabra ingresada incorrecta\033[0m\n");
+		}
+		if(verificarPalabras(aciertos, largoListaPalabras)){
+			imprimeLista(listaPalabras, largoListaPalabras);
+			imprimeMatriz(sopa, n);
+		}
 	}
+	
+	printf("-------------Fin del juego-------------");
+	return turnos;
 }
 
 void main(){
 	
 	//lista de ejemplo
-	char listaPalabras[5][MAX] = {"ciervo", "elefante", "caballo", "perro", "gato"};
+	//falta definir la lista para cada caso * borrar comentario
+	char listaPalabras[5][MAX] = {"A", "AAAA", "AA", "AAA", "AAAAAA"};
+	//cambiar para cada caso * borrar comentario
+	int largoListaPalabras = 5;  
 	int n;	
+	//defino la dificultad aqui
 	char dif = Datos[1];
 	n = largoMatriz(dif);
 	struct casilla sopa[n][n];
 	rellenaMatrix(sopa, n);
 	imprimeLista(listaPalabras, 5);
 	imprimeMatriz(sopa, n);
-	Jugar(sopa, n, listaPalabras);
+	//Jugar devuelve un int con los turnos utilizados
+	Jugar(sopa, n, listaPalabras, largoListaPalabras);
 }
