@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <ctype.h>
+#include "submenu.h"
+#include "registro.h"
 
 int main(){
 	printf("Bienvenido a Sopa de Letras 1.0\n");
@@ -9,10 +11,13 @@ int main(){
 		scanf("%s",&opcion);
 		switch(opcion){
 		case '1':
-			printf("Entre a la opcion 1\n");
+			int recibido = subMenu();
+			if(recibido!=0){
+				opcion=3;
+			}
 			break;
 		case '2':
-			printf("Entre a la opcion 2\n");
+			VerArchivo();
 			break;
 		case '3':
 			printf("Terminando programa, gracias por entrar a Sopa de Letras 1.0\n");
