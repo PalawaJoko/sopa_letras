@@ -1,2 +1,30 @@
-# sopa_letras
-proyecto final sopa de letras Programación DIMULTI
+# Proyecto Final Laboratorio: "Sopa de Letras". Universidad de Santiago de Chile
+Autores:
+-Marco Fribla
+-Sebastian Cerpa
+-Agustin Alvarado
+
+Proyecto Final Laboratorio
+Curso Metodos de Programación Interdisciplinaria
+
+Sección Laboratorio: 92008-0-L-3 (Martes, Bloque 4)
+Sección Teoría: 92008-0-B-2
+
+Prof. Teoría: Miguel Truffa
+Prof. Laboratorio: Analí Alfaro
+
+Programado en lenguaje C, entorno: Ubuntu 22.04
+Editor: Sublime Text version 4169
+
+Licencia: GNU Libre. Todos los derechos reservados
+Distribución permitida para: SOLO FINES ACADEMICOS
+PROHIBIDA SU DISTRIBUCIÓN COMERCIAL.
+
+Descripción de la aplicación:
+-El programa permite al usuario jugar a una sopa de letras
+-Las palabras se ponen de forma aleatoria en la sopa
+-Se muestra una lista de palabras a buscar
+-Se resaltan las palabras encontradas en la sopa y se tachan de la lista
+-El programa termina y permite al usuario guardar su puntaje en un registro
+-El usuario puede consultar los registros historicos desde el menu principal
+-El programa permite al usuario elegir si salir del programa o volver al menu principal cuando termina la partida
