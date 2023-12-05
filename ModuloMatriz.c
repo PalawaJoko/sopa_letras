@@ -3,43 +3,37 @@
 #include<string.h>
 #include<stdbool.h>
 #include<ctype.h>
+#include "definedstruct.h"
+#include "generartexto.h"
+#include "modulomatriz.h"
+#include "registro.h"
 
-#define MAX 10
-
-//Datos de entrada de ejemplo
-
-char Datos[2]= {'A', 'D'};
-
-struct casilla{
-	char Letra;
-	bool ocupado;
-	};	
+int MAX;
 
 //Se define el largo de la matriz a partir de la dificultad
-
 int largoMatriz(char dif){
 
 	switch(dif){
 		case 'F':
-			return 5;	
+			return 6;	
 			break;
 		case 'M':
-			return 7;
+			return 8;
 			break;
 		case 'D':
-			return 9;
+			return 10;
 			break;
 
 	}
 }
 
-void rellenaMatrix(struct casilla sopa[][MAX], int n){
+void inicializarMatrix(struct casilla sopa[][MAX], int n){
 
 	for(int i=0;i<n;i++){
 		for(int j=0;j<n; j++){
 		
-			sopa[i][j].Letra = 'A';
-			sopa[i][j].ocupado = true;
+			strcpy(sopa[i][j].dato, " ");
+			sopa[i][j].ocupado = false;
 		}
 	}
 }
@@ -55,10 +49,10 @@ void imprimeMatriz(struct casilla sopa[][MAX], int n){
 		printf("[%d]", i);
 		for(int j=0;j<n; j++){
 			if(sopa[i][j].ocupado){
-				printf("[%c]", sopa[i][j].Letra);
+				printf("[%c]", sopa[i][j].dato[0]);
 			}
 			else{
-				printf("[\033[1;34m%c\033[0m]", sopa[i][j].Letra);
+				printf("[\033[1;34m%c\033[0m]", sopa[i][j].dato[0]);
 			}
 			
 			
@@ -67,32 +61,27 @@ void imprimeMatriz(struct casilla sopa[][MAX], int n){
     }
 
 }
-//Funcion que permite imprimir en pantalla la lista de palabras
 
-void imprimeLista(char listaPalabras[MAX][MAX], int largoListaPalabras){
+//Funcion que permite imprimir en pantalla la lista de palabras
+void imprimeLista(struct string listaPalabras[MAX-1], int largoListaPalabras){
 	printf("Palabras a buscar: \n");
-	printf("[");
 	for(int i=0;i<(largoListaPalabras-1);i++){
-		
-		printf("%s, ", listaPalabras[i]);
+		printf("-%s", listaPalabras[i].dato);
 
 	}
-	printf("%s] \n", listaPalabras[largoListaPalabras-1]);
+	printf("%s\n", listaPalabras[largoListaPalabras-1].dato);
 }
 
 //Agrega elementos a un arreglo
-
-void agregarElemento(char palabraEscogida[MAX], int i, struct casilla sopa[][MAX], int j, int k){
-	palabraEscogida[i] = sopa[j][k].Letra;
+void agregarElemento(char palabraEscogida[60], int i, struct casilla sopa[MAX][MAX], int j, int k){
+	palabraEscogida[i] = sopa[j][k].dato[0];
 }
 
-//Corrobora que las palabra ingresada pertenezca a la lista (*por terminar*)
-
-void obtenerPalabra(int posIni_i, int posIni_j, int posFin_i, int posFin_j, char dir, struct casilla sopa[][MAX], int n, char palabraEscogida[MAX]){
-
+//Corrobora que las palabra ingresada pertenezca a la lista
+void obtenerPalabra(int posIni_i, int posIni_j, int posFin_i, int posFin_j, char dir, struct casilla sopa[MAX][MAX], int n, char temporal[60]){
 
 	for(int i = 0; i<MAX; i++){
-		agregarElemento(palabraEscogida, i, sopa, posIni_i, posIni_j);
+		agregarElemento(temporal, i, sopa, posIni_i, posIni_j);
 		if(posIni_i==posFin_i && posIni_j == posFin_j){
 			break;
 		}
@@ -128,17 +117,16 @@ void obtenerPalabra(int posIni_i, int posIni_j, int posFin_i, int posFin_j, char
 		}
 
 	}
-
 }
-//elimina la palabra de la lista 
 
-void eliminaPalabra(char listaPalabras[MAX][MAX], char palabraEscogida[MAX], int i){
+//elimina la palabra de la lista 
+void eliminaPalabra(struct string listaPalabras[MAX-1], char palabraEscogida[MAX], int i){
 	for(int j = 0; j < strlen(palabraEscogida); j++){
-		listaPalabras[i][j] = '-';
+		listaPalabras[i].dato[j] = '-';
 	}
 }
-//elimina la palabra de la matriz
 
+//elimina la palabra de la matriz
 void eliminaPalabraMatriz(struct casilla sopa[][MAX], int n, int posIni_i, int posIni_j, char dir, char palabraEscogida[MAX]){
 
 	for(int i = 0; i<strlen(palabraEscogida); i++){
@@ -164,21 +152,19 @@ void eliminaPalabraMatriz(struct casilla sopa[][MAX], int n, int posIni_i, int p
 }
 	
 //comprueba que la palabra ingresada pertenece a la lista
-
-bool validarPalabra(char palabraEscogida[MAX], char listaPalabras[MAX][MAX], int largoListaPalabras, struct casilla sopa[][MAX], int n, int posIni_i, 
-					int posIni_j, int posFin_i, int posFin_j, char dir){
-	for(int i = 0; i < largoListaPalabras; i++){
-		if(strcmp(palabraEscogida, listaPalabras[i])==0){
+bool validarPalabra(char palabraEscogida[MAX], struct string listaPalabras[MAX-1], struct casilla sopa[][MAX], int n, int posIni_i, int posIni_j, int posFin_i, int posFin_j, char dir){
+	for(int i = 0; i < MAX-1; i++){
+		if(strcmp(palabraEscogida, listaPalabras[i].dato)==-13){
 			eliminaPalabra(listaPalabras, palabraEscogida, i);
 			eliminaPalabraMatriz(sopa, n, posIni_i, posIni_j, dir, palabraEscogida);
 			return true;
+		}else{
 		}
 	}
 	return false;
 }
 
 //Verifica que aun queden palabras por buscar 
-
 bool verificarPalabras(int aciertos, int largoListaPalabras){
 	if( aciertos == largoListaPalabras){
 		return false;
@@ -188,19 +174,21 @@ bool verificarPalabras(int aciertos, int largoListaPalabras){
 	}
 }
 
-//Funcion que permite la interaccion con el usuario 
-//Jugar(Matriz principal, largo de la matriz, listado de palabras)
 
-int Jugar(struct casilla sopa[][MAX], int n, char listaPalabras[MAX][MAX], int largoListaPalabras){
+//Funcion que permite la interaccion con el usuario 
+int Jugar(struct casilla sopa[MAX][MAX], int n, struct string listaPalabras[MAX-1], int largoListaPalabras){
 	int turnos = 0;
 	int aciertos = 0;
-	printf("-------------Inicio del juego-------------");
-	while(verificarPalabras(aciertos, largoListaPalabras)){
+	bool condicion = true;
+	printf("-------------Inicio del juego-------------\n");
+	while(condicion!=false){
 		char posIni_i[MAX];
 		char posIni_j[MAX];
 		char posFin_i[MAX];
 		char posFin_j[MAX];
 		char dir[MAX];
+		imprimeLista(listaPalabras, MAX-1);
+		imprimeMatriz(sopa, MAX);
 		printf("Turnos utilizados = %d\n", turnos);
 		
 		//Preguntamos por la posicion inicial y final de la palabra, además de la direccion
@@ -275,46 +263,40 @@ int Jugar(struct casilla sopa[][MAX], int n, char listaPalabras[MAX][MAX], int l
 		}
 
 		turnos++;
-		char palabraEscogida[MAX] = "";
 		//variables auxiliares
 		int posIni_i_aux = atoi(posIni_i);
 		int posIni_j_aux = atoi(posIni_j);
 		int posFin_i_aux = atoi(posFin_i);
 		int posFin_j_aux = atoi(posFin_j);
-		
-		obtenerPalabra(posIni_i_aux, posIni_j_aux, posFin_i_aux, posFin_j_aux, dir[0], sopa, n, palabraEscogida);
-		if(validarPalabra(palabraEscogida, listaPalabras, largoListaPalabras, sopa, n, atoi(posIni_i), atoi(posIni_j), atoi (posFin_i), atoi (posFin_j), dir[0])){
+		char palabraTemp[60]="";
+		obtenerPalabra(posIni_i_aux, posIni_j_aux, posFin_i_aux, posFin_j_aux, dir[0], sopa, n, palabraTemp);
+		if(validarPalabra(palabraTemp, listaPalabras, sopa, n, atoi(posIni_i), atoi(posIni_j), atoi (posFin_i), atoi (posFin_j), dir[0])){
 			printf("\033[1;32mPalabra ingresada correcta\033[0m\n");
 			aciertos++;
 		}
 		else{
 			printf("\033[1;31mPalabra ingresada incorrecta\033[0m\n");
 		}
-		if(verificarPalabras(aciertos, largoListaPalabras)){
-			imprimeLista(listaPalabras, largoListaPalabras);
-			imprimeMatriz(sopa, n);
-		}
+		condicion = verificarPalabras(aciertos, MAX-1);
 	}
 	
-	printf("-------------Fin del juego-------------");
+	printf("-------------Fin del juego-------------\n");
 	return turnos;
 }
 
-void main(){
-	
-	//lista de ejemplo
-	//falta definir la lista para cada caso * borrar comentario
-	char listaPalabras[5][MAX] = {"A", "AAAA", "AA", "AAA", "AAAAAA"};
-	//cambiar para cada caso * borrar comentario
-	int largoListaPalabras = 5;  
-	int n;	
+
+int moduloMatriz(char datos[2][1]){
+	int largoListaPalabras;  
 	//defino la dificultad aqui
-	char dif = Datos[1];
-	n = largoMatriz(dif);
-	struct casilla sopa[n][n];
-	rellenaMatrix(sopa, n);
-	imprimeLista(listaPalabras, 5);
-	imprimeMatriz(sopa, n);
+	char dif = datos[1][0];
+	MAX = largoMatriz(dif);
+	struct casilla sopa[MAX][MAX];
+	struct string escogidas[MAX-1];
+	inicializarMatrix(sopa, MAX);
+	GenerarTexto(datos,sopa,escogidas);
 	//Jugar devuelve un int con los turnos utilizados
-	Jugar(sopa, n, listaPalabras, largoListaPalabras);
+	int turnos = Jugar(sopa, MAX, escogidas, largoListaPalabras);
+	printf("turnos finales: %d\n",turnos);
+	int flujo = registro(turnos,MAX);
+	return flujo;
 }
