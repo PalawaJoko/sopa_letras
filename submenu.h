@@ -4,10 +4,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "modulomatriz.h"
 
-
-void menuTemas(char Array[2][1]);
-void menuDif(char Array[2][1]);
+int menuTemas(char datos[][1]);
+void menuDif(char datos[][1]);
 int subMenu();
 
 #endif
