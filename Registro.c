@@ -1,13 +1,14 @@
-//para ejecutar el archivo: gcc -o Registro Registro.c -lm
+//para correr el archivo: gcc -o Registro Registro.c -lm
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <math.h>
 #include <string.h>
+#include "registro.h"
 
 //Abre el archivo en modo de lectura, comprueba si existe y muestra su contenido en la consola.
-void VerArchivo() {
+int VerArchivo() {
     FILE *archivo;
     char caracter;
 
@@ -21,6 +22,7 @@ void VerArchivo() {
         }
         fclose(archivo); // Cierra el archivo después de leerlo
     }
+    return 0;
 }
 
 //Abre el archivo, solicita al usuario que ingrese su nombre en 3 caracteres y luego lo guarda en el archivo.
@@ -77,17 +79,17 @@ void CalculadoraPuntaje(int turno, int dificultad) {
 
 void ComparacionPuntajes() {
     FILE *archivo = fopen("highscore.txt", "r");
-    double puntajes[5]; // Defino la lista con los 5 mejores puntajes
-    /*Array bidimensional para almacenar los tres caracteres del nombre 
-    y los inscritos en el archivo highscore.txt*/
-    char nombres[5][4];  
+    double puntajes[6]; // Defino la lista con los 5 mejores puntajes + puntaje a comparar
+    /* Array bidimensional para almacenar los tres caracteres del nombre 
+    y los inscritos en el archivo highscore.txt */
+    char nombres[6][4];  
     int aux = 0;
 
     // Envío el puntero al principio del archivo
     fseek(archivo, 0, SEEK_SET);
 
     // Ciclo para lectura de puntajes y nombres del archivo
-    while (aux < 5 && fscanf(archivo, "%3s %lf", nombres[aux], &puntajes[aux]) == 2) {
+    while (aux < 6 && fscanf(archivo, "%3s %lf", nombres[aux], &puntajes[aux]) == 2) {
         aux++;
     }
 
@@ -112,9 +114,10 @@ void ComparacionPuntajes() {
         }
     }
 
-    // Eliminar el sexto peor puntaje si es que hay al menos seis puntajes
+    // Eliminar el sexto peor puntaje + nombre si es que hay al menos seis puntajes
     if (aux >= 6) {
         puntajes[5] = 0; // Elimino el sexto puntaje
+        nombres[5][0] = '\0'; // Elimino su nombre
     }
 
     // Abrir el archivo en modo de escritura para sobrescribir el contenido
@@ -122,17 +125,43 @@ void ComparacionPuntajes() {
 
     // Escribir los puntajes ordenados en el archivo
     for (int i = 0; i < aux; i++) {
-        fprintf(archivo, "%s %.1f\n", nombres[i], puntajes[i]);
+    	if (puntajes[i] != 0.0){ //Condición que evita que se escriba la ultima línea con "0.0"
+
+    		//Se escribe de manera descendente la tabla de puntuaciones en el archivo
+    		fprintf(archivo, "%s %.1f\n", nombres[i], puntajes[i]);
+    	}
+        
     }
 
     // Cerrar el archivo después de escribir
     fclose(archivo);
 }
 
-int main() { //Ejecutar funciones anteriores
+int seguirJugando(){
+    char opcion;
+    printf("\n¿Desea Salir del Programa?\n");
+    while(opcion!='1'||opcion!='2'){
+        printf("1-Salir del Juego\n2-Volver al Menu Principal\n");
+        scanf("%c",&opcion);
+        switch(opcion){
+            case '1':
+                return 1;
+                break;
+            case '2':
+                return 0;
+                break;
+            default:
+                printf("Opcion no valida, intente nuevamente\n");
+        }
+    }
+}
+
+
+int registro(int turnos, int dificultad) { //Ejecutar funciones anteriores
     VerArchivo();
     IngresarNombre();
-    FuncionDeTurnos(1, 1); // Ejemplo de prueba
+    CalculadoraPuntaje(turnos, dificultad);
     ComparacionPuntajes();
-    return 0;
+    int flujo = seguirJugando();
+    return flujo;
 }
