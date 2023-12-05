@@ -2,19 +2,12 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "GenerarTexto.h"
+#include "definedstruct.h"
+#include "generartexto.h"
 
 int TAMAÑO_MATRIZ;
 int numeroPalabras;
 
-struct string{
-	char dato[60];
-};
-
-struct casilla{
-	char dato[60];
-	bool ocupado;
-};
 
 //rellena aleatoriamente un arreglo de ints
 void rellenarAleatorios(int *arreglo,int tamaño, int tope){
@@ -218,6 +211,7 @@ void rellenarLetrasAleatorias(struct casilla sopa[][TAMAÑO_MATRIZ]){
 			int random = rand()%26;
 			if(sopa[i][j].ocupado==false){
 				sopa[i][j].dato[0]=listaLetras[random];
+				sopa[i][j].ocupado=true;
 			}
 		}
 	}
@@ -248,8 +242,8 @@ void arreglarEscogidas(struct string escogidas[],char tema, int numeroPalabras){
 		}
 	}
 }
-
-void generarTexto(char datos[][1],struct casilla sopa[TAMAÑO_MATRIZ][TAMAÑO_MATRIZ],struct string escogidas[numeroPalabras]){
+//funcion principal del Modulo, recibe el tema, la dificultad, rellena la sopa de letras y devuelve la lista de palabras utilizadas
+void GenerarTexto(char datos[2][1],struct casilla sopa[TAMAÑO_MATRIZ][TAMAÑO_MATRIZ],struct string escogidas[TAMAÑO_MATRIZ-1]){
 	char tema = datos[0][0];
 	char dificultad = datos[1][0];
 	char ruta[100];
